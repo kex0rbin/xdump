@@ -67,16 +67,16 @@ int main(int argc, char *argv[]){
 			if(limit != 0 && limit > 0){
 				header();
 				printf("%x\t", addr); 
-				int lines = 1;
+				int lines = 0;
 				while((c = fgetc(f)) != EOF && lines <= limit)
 				{
-					//if(c < 16)printf("0",c);
 					string[cont] = intToChar(c);
 					print_byte(c);
 					cont++;
 					if(cont == 16){
 						string[16] = '\0';
 						print_string(string);
+						printf("\n");
 						lines++;
 						if(lines >= limit) break;
 						addr = ftell(f);
