@@ -1,4 +1,7 @@
+
 # xdump
+
+<img width="1276" height="453" alt="xdmp_kernel32dll" src="https://github.com/user-attachments/assets/54d4d764-2685-48ff-912d-76a9559b6159" />
 
 This is a small hexdump tool written in C.
 
@@ -6,7 +9,7 @@ When working with tools like **GDB**, **Ghidra**, or doing **reverse engineering
 
 It is a simple project, but it is useful for studying low-level programming, binary analysis, and understanding how data is stored inside files.
 
-## Requirements
+### Requirements
 
 You only need a C compiler.
 
@@ -22,7 +25,7 @@ Compile the program:
 gcc xdump.c converter.c -o xdmp
 ```
 
-## Usage
+### Usage
 
 Run the program by passing the file you want to analyze:
 
