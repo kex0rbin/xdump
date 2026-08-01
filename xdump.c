@@ -5,17 +5,18 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "converter.h"
 
 #define GREEN "\x1b[32;1m"
 #define RESET "\x1b[0m"
 
-#define HELP_FILE " xdmp tool: Put the name of the file as the second argument. Uses:\n \txdmp <file>\n \txdmp <file> <lines>\n"
+#define HELP_FILE " xdmp tool: Select an option and the file.\n \t xdmp <option> <file>\n Uses:\n\t Hexdump:\txdmp h <file>\n\t\t\txdmp h <file> <lines>\n\n\t Strings:\txdmp s <file>\n\n\t Help:\t\txdmp h\n"
 #define INVALID_ARGUMENTS " xdmp tool: To many arguments.\n"
 #define F_LINE "Offset\t\t00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F\tDecoded Text\n\n"
-#define ERROR_FILE " xdmp tool: File not found.\n"
-#define INVALID_INPUT " xdmp tool: Invalid number! (Second argument).\n"
-
+#define ERROR_FILE " xdmp tool: File not found or not selected.\n"
+#define INVALID_INPUT " xdmp tool: Invalid number! (Third argument).\n"
+#define INVALID_OPTION " xdmp tool: Put a valid option:\n\td for hexdump, s for extract strings.\n"
 void print_string(char *str);
 void print_byte(int byte);
 void header(){
@@ -28,30 +29,46 @@ int main(int argc, char *argv[]){
 	if(argc <= 1){printf(HELP_FILE);return 1;}
 
 	if(argc >= 2){
-		if(argc > 3){
+		if(argc > 4){
 			printf(INVALID_ARGUMENTS);
 			return 1;
 		}
+		if(strcmp(argv[1],"d")==0){
+			FILE *f = fopen(argv[2], "rb");
+			if(f == NULL){
+				printf(ERROR_FILE);
+				return 1;
+			}
+			if(argc == 3){
+				show_all(f);
+			}else{
+				int limit = atoi(argv[3]);
+				if(limit > 0){
+					show_with_limits(f,limit);
+					printf("\n");
+				}else{
+					printf(INVALID_INPUT);
+				}
+				fclose(f);
+				return 0;
+			}
 
-		FILE *f = fopen(argv[1], "rb");
-		if(f == NULL){
-			printf(ERROR_FILE);
+		}else if(strcmp(argv[1],"s")==0){
+			if(argc > 3){
+				printf(INVALID_ARGUMENTS);
+				return 1;
+			}
+			printf(" We are working on this :D.\n");
+
+
+			return 0;
+		}else if(strcmp(argv[1],"h")==0){
+			printf(HELP_FILE);
+		}else{
+			printf(INVALID_OPTION);
 			return 1;
 		}
 
-		if(argc == 2){
-			show_all(f);
-		}else{
-			int limit = atoi(argv[2]);
-			if(limit > 0){
-				show_with_limits(f,limit);
-			}else{
-				printf(INVALID_INPUT);
-			}
-		}
-		printf("\n");
-		fclose(f);
-		return 0;
 	}		
 }
 
