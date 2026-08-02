@@ -6,46 +6,42 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "converter.h"
+#include "utils.h"
 
-
-#define HELP_FILE " xdmp tool: Select an option and the file.\n \t xdmp <option> <file>\n Uses:\n\t Hexdump:\txdmp d <file>\n\t\t\txdmp d <file> <lines>\n\n\t Strings:\txdmp s <file>\n\n\t Help:\t\txdmp h\n"
-#define INVALID_ARGUMENTS " xdmp tool: To many arguments.\n"
-#define F_LINE "Offset\t\t00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F\tDecoded Text\n\n"
+#define header() printf("Offset\t\t00   01   02   03   04   05   06   07   08   09   0A   0B   0C   0D   0E   0F\tDecoded Text\n\n")
 #define FILE_NOT_FOUND " xdmp tool: File not found.\n"
 #define FILE_NOT_SELECTED " xdmp tool: File not selected.\n"
+#define HELP_FILE " xdmp tool: Select an option and the file.\n \t xdmp <option> <file>\n Uses:\n\t Hexdump:\txdmp d <file>\n\t\t\txdmp d <file> <lines>\n\n\t Strings:\txdmp s <file>\n\n\t Help:\t\txdmp h\n"
 #define INVALID_INPUT " xdmp tool: Invalid number! (Third argument).\n"
 #define INVALID_OPTION " xdmp tool: Put a valid option:\n\td for hexdump, s for extract strings.\n"
+#define INVALID_ARGUMENTS " xdmp tool: To many arguments.\n"
 
-void header(void){
-	printf(F_LINE);
-}
+
 void show_all(FILE *f);
 void show_with_limits(FILE *f, int limit);
+void show_strings(FILE *f);
 
 int main(int argc, char *argv[]){
 	if(argc <= 1){printf(HELP_FILE);return 1;}
-	if(argc > 4){
-		printf(INVALID_ARGUMENTS);
-		return 1;
-	}
+	if(argc > 4){printf(INVALID_ARGUMENTS);return 1;}
 
 	if(strcmp(argv[1],"d")==0){
-		if(argc == 2){
+		if(check(argc) != 0){
 			printf(FILE_NOT_SELECTED);
 			return 1;
 		}
+
 		FILE *f = fopen(argv[2], "rb");
 		if(f == NULL){
 			printf(FILE_NOT_FOUND);
 			return 1;
 		}
 		if(argc == 3){
-			show_all(f);
+			show_all(f);//hexdump without limits
 		}else{
 			int limit = atoi(argv[3]);
 			if(limit > 0){
-				show_with_limits(f,limit);
+				show_with_limits(f,limit);//hexdump with limits
 				printf("\n");
 			}else{
 				printf(INVALID_INPUT);
@@ -54,13 +50,11 @@ int main(int argc, char *argv[]){
 		}
 		fclose(f);
 		return 0;
-
 	}else if(strcmp(argv[1],"s")==0){
-		if(argc == 2){
+		if(check(argc) != 0){
 			printf(FILE_NOT_SELECTED);
 			return 1;
 		}
-
 		if(argc > 3){
 			printf(INVALID_ARGUMENTS);
 			return 1;
@@ -70,31 +64,7 @@ int main(int argc, char *argv[]){
 			printf(FILE_NOT_FOUND);
 			return 1;
 		}
-		int c;
-		int cont = 0; char buff[4] = {'\0'};
-
-		while((c = fgetc(f)) != EOF){
-			if(c >= 32 && c <= 125){
-				if(cont < 4){
-					buff[cont] = c;
-				}
-				cont++;
-				if(cont == 4){
-					print_buff(buff);
-				}
-
-				if(cont > 4){
-					printf("%c",c);
-				}
-
-			}else{
-				if(cont >= 4){
-					printf("\n");
-				}
-				cont = 0;
-			}
-		}
-		printf("\n");			
+		show_strings(f);//strings without word selected
 		fclose(f);
 		return 0;
 	}else if(strcmp(argv[1],"h")==0){
@@ -102,9 +72,8 @@ int main(int argc, char *argv[]){
 	}else{
 		printf(INVALID_OPTION);
 		return 1;
-	}
-		
-}
+	}		
+}//end main
 
 void show_all(FILE *f){
 		fseek(f,0,SEEK_END);
@@ -130,26 +99,49 @@ void show_all(FILE *f){
 }
 
 void show_with_limits(FILE *f, int limit){
-		char string[17];
-		int c, cont = 0;
-		header();
-		printf("%08x\t", ftell(f)); 
-		int lines = 0;
-		while((c = fgetc(f)) != EOF){
-			string[cont] = intToChar(c);
-			print_colored_byte(c);
-			cont++;
-			if(cont == 16){
-				string[cont] = '\0';
-				print_colored_string(string);
-				printf("\n");
-				lines++;
-				if(lines >= limit) break;
-				printf("%08x\t", ftell(f));
-				cont = 0;	
-			}
-				
+	char string[17];
+	int c, cont = 0;
+	header();
+	printf("%08x\t", ftell(f)); 
+	int lines = 0;
+	while((c = fgetc(f)) != EOF){
+		string[cont] = intToChar(c);
+		print_colored_byte(c);
+		cont++;
+		if(cont == 16){
+			string[cont] = '\0';
+			print_colored_string(string);
+			printf("\n");
+			lines++;
+			if(lines >= limit) break;
+			printf("%08x\t", ftell(f));
+			cont = 0;	
 		}
+	}
 }
 
+void show_strings(FILE *f){
+	int c;
+	int cont = 0; char buff[4] = {'\0'};
+	while((c = fgetc(f)) != EOF){
+			if(c >= 32 && c <= 125){
+				if(cont < 4){
+					buff[cont] = c;
+				}
+				cont++;
+				if(cont == 4){
+					print_buff(buff);
+				}
+				if(cont > 4){
+					printf("%c",c);
+				}
+			}else{
+				if(cont >= 4){
+					printf("\n");
+				}
+				cont = 0;
+			}
+		}
+	printf("\n");			
+}
 

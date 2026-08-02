@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "converter.h"
+#include "utils.h"
 #define GREEN "\x1b[32;1m"
 #define RESET "\x1b[0m"
 
@@ -37,4 +37,13 @@ void print_buff(char *buff){
 	for (int i = 0; i < 4; i++){
 		printf("%c", buff[i]);
 	}
+}
+
+int check(int argc){
+	if(argc == 2){
+		return 1;
+	}else{
+		return 0;
+	}
+
 }
