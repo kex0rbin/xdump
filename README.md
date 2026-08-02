@@ -1,5 +1,4 @@
 
-
 # xdump
 
 
@@ -7,7 +6,7 @@
 
 This is a small hexdump tool written in C.
 
-When working with tools like **GDB**, **Ghidra**, or doing **reverse engineering**, you often need to inspect the raw bytes of a file or extract readable strings to see functions, imports or plane text. This tool allows you to view binary files directly from the terminal , displaying their hexadecimal representation, their offset and their ASCII interpretation. Or you can also extract strings. Two functions in a single tool. You can also specify the number of lines that you want to see.
+When working with tools like **GDB**, **Ghidra**, or doing **reverse engineering**, you often need to inspect the raw bytes of a file or extract readable strings to see functions, imports or plain text. This tool allows you to view binary files directly from the terminal, displaying their hexadecimal representation, their offset and their ASCII interpretation and specify the number of lines that you want to see. Or you can also extract strings. Two functions in a single tool.
 
 It is a simple project, but it is useful for studying low-level programming, binary analysis, and understanding how data is stored inside files.
 
@@ -77,6 +76,6 @@ Similar to strings unix tool, you can also extract the strings from the file:
 
 * This project was created to practice file handling in C (`FILE`, `fopen`, `fgetc`) and understand how binary data is represented.
 * It was developed as a learning tool for low-level programming and reverse engineering (my own tool for studies and reversing).
-* The goal is not to replace existing utilities like `hexdump`, but to implement a simple version from scratch.
+* The goal is NOT to replace existing utilities like `hexdump`, but to implement a simple version from scratch.
 
 Enjoy!
