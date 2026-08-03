@@ -6,7 +6,7 @@
 
 This is a small hexdump tool written in C.
 
-When working with tools like **GDB**, **Ghidra**, or doing **reverse engineering**, you often need to inspect the raw bytes of a file or extract readable strings to see functions, imports or plain text. This tool allows you to view binary files directly from the terminal, displaying their hexadecimal representation, their offset and their ASCII interpretation and specify the number of lines that you want to see. Or you can also extract strings. Two functions in a single tool.
+When working with tools like **GDB**, **Ghidra**, or doing **reverse engineering**, you often need to inspect the format, the raw bytes of a file or extract readable strings to see functions, imports or plain text. This tool allows you to view binary files directly from the terminal, displaying their hexadecimal representation, their offset and their ASCII interpretation and specify the number of lines that you want to see. Or you can also extract strings. Two functions in a single tool.
 
 It is a simple project, but it is useful for studying low-level programming, binary analysis, and understanding how data is stored inside files.
 
@@ -23,7 +23,7 @@ sudo apt install gcc
 Compile the program:
 
 ```bash
-gcc xdump.c utils.c -o xdmp
+gcc xdump.c utils.c parser.c -o xdmp
 ```
 
 ### Usage
@@ -34,7 +34,7 @@ Run the program by passing the file you want to analyze:
 ./xdmp <option> <file>
 ```
 
-At the moment, this tools has two options:
+At the moment, this tools has three options:
 ### a) Hexdump 
 
 ```bash
@@ -61,6 +61,22 @@ Similar to strings unix tool, you can also extract the strings from the file:
 ```bash
 ./xdmp s <file>
 ```
+### c) File data
+Similar to strings unix tool, you can also extract the strings from the file:
+
+
+```bash
+./xdmp f <file>
+```
+
+Output:
+
+```
+File name: <namefile>
+File size: <size in bytes/kb>
+File format: <format>
+```
+
 
 ## Features
 
@@ -71,6 +87,8 @@ Similar to strings unix tool, you can also extract the strings from the file:
 * You can choose line limit for the hexdump.
 * Works with different file types, including executables.
 * Extract the strings from the file for a better individual analysis.
+* Detect file format using file headers
+* Display basic file information from the file.
 
 ## Notes
 
