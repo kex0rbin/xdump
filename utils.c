@@ -17,7 +17,7 @@ void print_colored_string(char *str){
 }
 
 void print_colored_byte(int byte){
-	if(byte >= 40 && byte <= 125){
+	if(byte >= 35 && byte <= 125){
 		printf(GREEN "%02x   " RESET, byte);
 	}else{
 		printf("%02x   ", byte);
@@ -26,7 +26,7 @@ void print_colored_byte(int byte){
 
 
 char intToChar(int num){
-	if(num >= 40 && num <= 122){
+	if(num >= 35 && num <= 125){
 		char c = num;
 		return c;
 	}else{
