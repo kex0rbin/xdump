@@ -94,6 +94,8 @@ File format: <format>
 
 * This project was created to practice file handling in C (`FILE`, `fopen`, `fgetc`) and understand how binary data is represented.
 * It was developed as a learning tool for low-level programming and reverse engineering (my own tool for studies and reversing).
-* The goal is NOT to replace existing utilities like `hexdump`, but to implement a simple version from scratch.
+* The goal is NOT TO REPLACE existing utilities like `hexdump` or `strings`, but to implement a simple version from scratch.
+
+<img width="1307" height="676" alt="xdump2" src="https://github.com/user-attachments/assets/3c4a282c-495d-4251-91de-66220c9ca9d7" />
 
 Enjoy!
