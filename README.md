@@ -87,7 +87,7 @@ File format: <format>
 * You can choose line limit for the hexdump.
 * Works with different file types, including executables.
 * Extract the strings from the file for a better individual analysis.
-* Detect file format using file headers
+* Detect file format using file headers (supports PE,ELF,RAR,7ZIP,GZIP,ZIP,PDF,PNG,JPEG,MP3).
 * Display basic file information from the file.
 
 ## Notes
