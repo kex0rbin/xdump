@@ -75,6 +75,11 @@ int main(int argc, char *argv[]){
 			printf(FILE_NOT_SELECTED);
 			return 1;
 		}
+		if(argc > 3){
+			printf(INVALID_ARGUMENTS);
+			return 1;
+		}
+
 		FILE *f = fopen(argv[2], "rb");
 		if(f == NULL){
 			printf(FILE_NOT_FOUND);
