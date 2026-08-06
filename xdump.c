@@ -16,13 +16,13 @@
 #define INVALID_INPUT " xdmp tool: Invalid number! (Third argument).\n"
 #define INVALID_OPTION " xdmp tool: Put a valid option:\n\td for hexdump, s for extract strings, f for file data.\n"
 #define INVALID_ARGUMENTS " xdmp tool: To many arguments.\n"
-
+#define SHORT_STRING " xdmp tool: Write 3 letters at least.\n"
 int read_headers(FILE *f);
 void print_format(int n);
 void file_data(FILE *f, char *buff);
 void show_all(FILE *f);
 void show_with_limits(FILE *f, int limit);
-void show_strings(FILE *f);
+void show_strings(FILE *f, char *str, const int flag);
 
 int main(int argc, char *argv[]){
 	if(argc <= 1){printf(HELP_FILE);return 1;}
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]){
 			printf(FILE_NOT_SELECTED);
 			return 1;
 		}
-		if(argc > 3){
+		if(argc > 4){
 			printf(INVALID_ARGUMENTS);
 			return 1;
 		}
@@ -67,7 +67,16 @@ int main(int argc, char *argv[]){
 			printf(FILE_NOT_FOUND);
 			return 1;
 		}
-		show_strings(f);//strings without word selected
+		if(argc == 3){
+		show_strings(f,"\0",0);//strings without word selected
+		}else if(argc == 4){
+			if(strlen(argv[3]) < 4){
+				printf(SHORT_STRING);
+			}else{
+				show_strings(f,argv[3],1);
+			}
+		}
+
 		fclose(f);
 		return 0;
 	}else if(strcmp(argv[1],"f")==0){
@@ -142,13 +151,25 @@ void show_with_limits(FILE *f, int limit){
 	}
 }
 
-void show_strings(FILE *f){
-	int c;
+void show_strings(FILE *f, char *str, const int flag){
+	#define RED "\x1b[31m"
+	#define RESET "\x1b[0m"
+	int c, i=0;
 	int cont = 0; char buff[4] = {'\0'};
 	while((c = fgetc(f)) != EOF){
 			if(c >= 32 && c <= 125){
+				if(flag == 1){
+					if(c == str[i]){
+						printf(RED);
+						i++;
+					}else{
+						printf(RESET);
+						i=0;
+					}
+				}
 				if(cont < 4){
 					buff[cont] = c;
+
 				}
 				cont++;
 				if(cont == 4){
