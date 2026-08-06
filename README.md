@@ -61,6 +61,13 @@ Similar to strings unix tool, you can also extract the strings from the file:
 ```bash
 ./xdmp s <file>
 ```
+You can also search matches with a word (specify searches):
+
+```bash
+./xdmp s <file> <word>
+```
+_If it finds a match, this will be in red._
+
 ### c) File data
 Similar to strings unix tool, you can also extract the strings from the file:
 
